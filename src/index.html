@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Finder - All About Makeup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            margin: 20px;
+        }
+        /* Style for the website name */
+        .site-title {
+            font-family: 'broadway', sans-serif;
+            font-size: 28px;
+            color: #e1dfdf;
+            position: absolute;
+            top: 10px;
+            left: 6px;
+            text-shadow: 0 0 4px #020202, 0 0 4px #020202;
+            padding: 5px 10px;
+            border-radius: 8px;
+            z-index: 1;
+        }
+        /* Style for the header image */
+        .header-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 370px;
+            margin-bottom: 20px;
+            overflow: hidden; /* Prevents the overlay from spilling outside */
+        }
+        .header-image {
+            width: 100%;
+            height: 370px;
+            object-fit: fill;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Dark semi-transparent overlay */
+        }
+        header {
+            font-family: 'showcard gothic';
+            font-size: 20px;
+            color: #5c3a3a;
+            text-align: center;
+            flex: 1;
+            padding: 10px;
+            background-color: #e1c8c8;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        aside {
+            width: 20%;
+            padding: 20px;
+            background-color: #e1c8c8;
+            border-radius: 10px;
+            height: auto;  /* Ensures the sidebar has only the necessary height */
+            max-height: 200px; /* Fixed height */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        aside h2{
+            font-family: 'britannic';
+        }
+        aside input, aside select {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        aside button{
+            display: block;
+            width: 50%;
+            margin: 0 auto 30px;
+            margin-top: 5px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+        }
+        aside button:hover {
+            background-color: #be9898;
+        }
+        .icon-container {
+            display: flex;
+            gap: 15px; /* Space between icons */
+            background-color: #e1c8c8;
+            border-radius: 10px;
+            margin-left: 250px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        /* Style for the wishlist icon */
+        .wishlist-icon {
+            font-size: 2.6em;
+            color: #bf5c5c;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .wishlist-icon i, .cart-icon i {
+            margin-left: 10px;
+        }
+        .wishlist-icon:hover, .cart-icon:hover {
+            color: #823c3c;
+        }
+        /* Cart Icon */
+        .cart-icon {
+            font-size: 1.7em;
+            color: #bf5c5c;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        .cart-icon i {
+            margin-right: 10px;
+            color: #bf5c5c;
+        }
+        .cart-icon i:hover {
+            color: #823c3c;
+        }
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            margin-left: 300px;
+            margin-bottom: 20px;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 0 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .filter-btn:hover {
+            background-color: #e1c8c8;
+        }
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: 80%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+        .search-bar button {
+            padding: 10px;
+            background-color: #933a3a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
+        }
+        .search-bar button:hover {
+            background-color: #5f1919;
+        }
+        /* Add hover effect to the product image */
+        .product-card img {
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+        }
+        .product-card img:hover {
+            transform: scale(1.05); /* Slightly enlarges the image */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Adds shadow to make it pop */
+            opacity: 0.9; /* Slightly fades the image */
+        }
+        #product-results {
+            background-color: #e1c8c8;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        #product-results div {
+            margin-bottom: 20px;
+            width: calc(25% - 20px); /* Adjust the width to fit 4 items per row */
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;     /* Center content inside each card */
+            text-align: center;
+        }
+        #product-results img {
+            width: 210px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        #product-results h3 {
+            margin: 10px 0 5px;
+            font-family: 'britannic';
+            font-size: 1.7em;
+            color: #501313;
+        }
+        #product-results p {
+            margin: 5px 0;
+            font-size: 1em;
+        }
+        #productModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px; /* Adjust width here */
+            z-index: 1000;
+        }
+        #productModal img {
+            width: 40%; /* Set to full width of the container */
+            height: auto; /* Maintains the aspect ratio */
+            max-height: 200px; /* Limit the max height for consistency */
+            object-fit: cover; /* Ensures the image fills the area while maintaining aspect ratio */
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: block; /* Ensures proper centering */
+            margin-left: auto; /* Center the image */
+            margin-right: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        #productModal h2 {
+            font-family: 'britannic';
+            font-size: 30px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        #productModal p {
+            margin: 10px 0;
+            line-height: 1.5;
+            font-size: 15px;
+            color: #555;
+            text-align: left;
+        }
+        #productModal p strong {
+            font-weight: bold;
+            color: #333;
+        }
+        .link-btn-container {
+            display: flex;
+            justify-content: center; /* Center-aligns the buttons */
+            gap: 10px; /* Adds space between buttons */
+            margin-top: 15px; /* Adds space between the buttons and the preceding content */
+        }
+        .link-btn {
+            text-decoration: none;
+            color: #f0efef;
+            background-color: #933a3a;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .link-btn:hover {
+            background-color: #5f1919;
+        }
+        /* Style for Buy and Wishlist buttons */
+        .buy-btn, .wishlist-btn, .cart-btn {
+            padding: 10px 15px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-size: 0.9em;
+        }
+        .buy-btn {
+            background-color: #933a3a;
+        }
+        .buy-btn:hover {
+            background-color: #5f1919;
+        }
+        .wishlist-btn {
+            background-color: #933a3a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .wishlist-btn:hover {
+            background-color: #5f1919;
+        }
+        .wishlist-btn i {
+            font-size: 1.2em;
+            margin-right: 5px;
+            color: #ff6b6b; /* Heart icon color */
+        }
+        .cart-btn {
+            background-color: #933a3a;
+            position: relative;
+            z-index: 10;
+            cursor: pointer;
+        }
+        .cart-btn:hover {
+            background-color: #5f1919;
+        }
+        /* Footer */
+        footer {
+            background-color: #ccaeae;
+            color: #000000;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-image-wrapper">
+        <!-- Website Name -->
+        <div class="site-title">Queen's Palette</div>
+        <!-- Header Image -->
+        <img src="makeup7.jpeg" alt="Makeup Banner" class="header-image">
+        <div class="overlay"></div>
+    </div>
+
+    <div class="container">
+        <aside>
+            <h2>Filter Product</h2>
+
+            <div>
+                <label for="price-filter">Price Range</label>
+                <select id="price-filter">
+                    <option value="">Select Price Range</option>
+                    <option value="0-10">0 - 10 USD</option>
+                    <option value="10-20">10 - 20 USD</option>
+                    <option value="20-50">20 - 50 USD</option>
+                    <option value="50-100">50 USD above</option>
+                </select>
+            </div>
+            
+            <button id="filter-btn">Apply Filters</button>
+        </aside>
+        
+        <main>
+            <header>
+                <h1>All About Makeup</h1>
+            </header>
+            <div class="search-bar">
+                <input type="text" id="brand-name" placeholder="Enter Brand (e.g. Maybelline)">
+                <input type="text" id="product-name" placeholder="Search Product Type (optional)">
+                <button id="search-btn">Search</button>
+            </div>
+
+            <div class="filter-bar">
+                <button class="filter-btn" data-filter="1">1</button>
+                <button class="filter-btn" data-filter="2">2</button>
+                <button class="filter-btn" data-filter="3">3</button>
+                <button class="filter-btn" data-filter="4">4</button>
+                <button class="filter-btn" data-filter="5">5</button>
+                <button class="filter-btn" data-filter="6">6</button>
+
+                <div class="icon-container">
+                    <!-- Wishlist icon link -->
+                    <a href="wishlist.html" class="wishlist-icon" title="Go to Wishlist">
+                        <i>&#9829;</i>
+                    </a>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                    <a href="cart.html" class="cart-icon" title="Go to Cart">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div id="product-results"></div>
+
+            <!-- Product Details Modal -->
+            <div id="productModal">
+                <span onclick="closeModal()" style="position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer;">&times;</span> <!-- 'x' icon for closing modal -->
+                <h2 id="modalProductName"></h2>
+                <img id="modalProductImage" src="" alt="Product Image">
+                <p><strong>Brand:</strong> <span id="modalProductBrand"></span></p>
+                <p><strong>Price:</strong> $<span id="modalProductPrice"></span></p>
+                <p><strong>Description:</strong> <span id="modalProductDescription"></span></p>
+                <p><strong>Rating:</strong> <span id="modalProductRating"></span></p>
+                <p><strong>Product Type:</strong> <span id="modalProductType"></span></p>
+                <p><strong>Category:</strong> <span id="modalProductCategory"></span></p>
+                <p><strong>Tags:</strong> <span id="modalProductTags"></span></p>
+
+                <div class="link-btn-container">
+                    <a class="link-btn" id="modalWebsiteLink" href="" target="_blank">Website Link</a>
+                    <a class="link-btn" id="modalProductLink" href="" target="_blank">Product Link</a>
+                </div>
+            </div>
+            
+            <div id="modalBackdrop" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999;" onclick="closeModal()"></div>
+        </main>
+    </div>
+    <!-- Footer section -->
+    <footer>
+        <p>&copy; 2024 Queen's Palette. All rights reserved.</p>
+        <p>Contact us: info@queenpalette.com | Phone: +60 123-456-789</p>
+    </footer>
+
+    <script>
+        // Array to store all products retrieved from the API for pagination and filtering
+        let allProducts = [];
+        const itemsPerPage = 51;  // Show half of the products
+
+        document.getElementById('search-btn').addEventListener('click', searchProducts);
+        document.getElementById('filter-btn').addEventListener('click', applyFilters);
+
+        // Function to search products by brand and product type
+        async function searchProducts() {
+            // Retrieves values
+            const brand = document.getElementById('brand-name').value.trim().toLowerCase();
+            const query = document.getElementById('product-name').value.trim().toLowerCase();
+
+            let apiUrl = `http://makeup-api.herokuapp.com/api/v1/products.json`;
+
+            // Dynamically add query parameters for brand and product type if specified
+            if (brand) {
+                apiUrl += `?brand=${brand}`;
+            }
+
+            if (query) {
+                apiUrl += brand ? `&product_type=${query}` : `?product_type=${query}`;
+            }
+
+            try {
+                const response = await fetch(apiUrl);
+                allProducts = await response.json();  // Store all fetched products
+                //display the first page initially
+                displayProducts(allProducts.slice(0, itemsPerPage));  // Display the first page initially
+
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+        //Event listeners for pagination buttons
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const page = this.getAttribute('data-filter');
+                filterProducts(page);
+            });
+        });
+
+        // Function to handle pagination
+        function filterProducts(page) {
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const productsToDisplay = allProducts.slice(start, end);
+
+            displayProducts(productsToDisplay);
+        }
+        function applyFilters() {
+            const priceRange = document.getElementById('price-filter').value;
+            let minPrice, maxPrice;
+
+            if (priceRange) {
+                const priceParts = priceRange.split('-');
+                minPrice = priceParts[0] ? parseFloat(priceParts[0]) : null;
+                maxPrice = priceParts[1] ? parseFloat(priceParts[1]) : null;
+            }
+
+            let apiUrl = `http://makeup-api.herokuapp.com/api/v1/products.json`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    allProducts = data.filter(product => {
+                        const price = parseFloat(product.price);
+                        // Filter only products within the specified price range
+                        const matchesPrice = (minPrice === null || price >= minPrice) && (maxPrice === null || price <= maxPrice);
+                        return matchesPrice;
+                    });
+
+                    if (allProducts.length === 0) {
+                        console.log("No products match the selected filters.");
+                    }
+                    displayProducts(allProducts.slice(0, itemsPerPage));
+                })
+                .catch(error => {
+                    console.error('Error applying filters:', error);
+                });
+        }
+        //Check if an image link is valid
+        function imageExists(url, callback) {
+            const img = new Image();
+            img.onload = () => callback(true);
+            img.onerror = () => callback(false);
+            img.src = url;
+        }
+        function displayProducts(products) {
+            const productResults = document.getElementById('product-results');
+            productResults.innerHTML = '';  // Clear previous results
+
+            if (products.length === 0) {
+                productResults.innerHTML = '<p>No products found.</p>';
+                return;
+            }
+            products.forEach(product => {
+                if (product.image_link && product.image_link.trim() !== '') {
+                    const productElement = document.createElement('div');
+                    productElement.classList.add('product-card');
+
+                    // Check if the image actually exists
+                    imageExists(product.image_link, (exists) => {
+                        if (exists) {
+                            // Only create and append the product element if the image exists
+                            const productElement = document.createElement('div');
+                            productElement.classList.add('product-card');
+                            //productElement.setAttribute('data-product-type', product.product_type.toLowerCase()); // Add product type for filtering
+
+                            productElement.innerHTML = `
+                                <h3>${product.name}</h3>
+                                <img src="${product.image_link}" alt="${product.name}" style="cursor: pointer;">
+                                <p>Price: ${product.price || 'Not available'} USD</p>
+                                <button class="buy-btn" onclick="buyProduct('${product.product_link}')">Buy</button>
+                                <button class="cart-btn" onclick="addToCart('${product.name}', '${product.image_link}', '${product.price}')">
+                                    <i>&#128722;</i>Add To Cart
+                                </button>
+                                <button class="wishlist-btn" onclick="addToWishlist('${product.name}', '${product.image_link}', '${product.price}')">
+                                    <i>&#9825;</i> Add to Wishlist
+                                </button>
+                            `;
+                            productResults.appendChild(productElement);
+
+                            //Click event listener to open modal
+                            productElement.querySelector('img').addEventListener('click', () => openModal(product));
+                            productResults.appendChild(productElement);
+                        }
+                    });
+                }
+            });
+        }
+        // Function to open the modal with product details
+        function openModal(product) {
+            document.getElementById('modalProductName').textContent = product.name;
+            document.getElementById('modalProductBrand').textContent = product.brand;
+            document.getElementById('modalProductPrice').textContent = product.price;
+            document.getElementById('modalProductDescription').textContent = product.description ? product.description : "No description available";
+            document.getElementById('modalProductRating').textContent = product.rating ? product.rating : "0";  //set to 0 if rating is null
+            document.getElementById('modalProductType').textContent = product.product_type;
+            document.getElementById('modalProductImage').src = product.image_link;
+            document.getElementById('modalWebsiteLink').href = product.website_link;
+            document.getElementById('modalProductLink').href = product.product_link;
+            document.getElementById('modalProductCategory').textContent = product.category ? product.category : "N/A";
+            // Set the Tag List
+            if (product.tag_list && product.tag_list.length > 0) {
+                document.getElementById('modalProductTags').textContent = product.tag_list.join(", ");
+            } else {
+                document.getElementById('modalProductTags').textContent = "No tags available";
+            }
+
+            // Show the modal and backdrop
+            document.getElementById('productModal').style.display = 'block';
+            document.getElementById('modalBackdrop').style.display = 'block';
+        }
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('productModal').style.display = 'none';
+            document.getElementById('modalBackdrop').style.display = 'none';
+        }
+        function buyProduct(product_link) {  // Redirects to the product link in a new tab
+            if (product_link) {
+                window.open(product_link, '_blank'); // Open the link in a new tab
+            } else {
+                alert("Product link is not available.");
+            }
+        }
+        function addToCart(name, image, price) {     // Adds product to localStorage as part of the shopping cart
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.push({ name, image, price });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${name} has been added to your cart!`);
+        }
+        function addToWishlist(name, image, price) {      // Adds product to localStorage for wishlist
+            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            wishlist.push({ name, image, price });
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            alert(`${name} has been added to your wishlist!`);
+        }
+        // Fetch all products when the page loads
+        window.onload = searchProducts;
+    </script>
+</body>
+</html>

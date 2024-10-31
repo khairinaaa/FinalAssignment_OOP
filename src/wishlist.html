@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Wishlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        /* Style for the website name */
+        .site-title {
+            font-family: 'broadway', sans-serif;
+            font-size: 28px;
+            color: #e1dfdf;
+            position: absolute;
+            top: 10px;
+            left: 6px;
+            text-shadow: 0 0 4px #020202, 0 0 4px #020202;
+            padding: 5px 10px;
+            border-radius: 8px;
+            z-index: 1;
+        }
+        /* Style for the header image */
+        .header-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 370px;
+            margin-bottom: 20px;
+            overflow: hidden; /* Prevents the overlay from spilling outside */
+        }
+        .header-image {
+            width: 100%;
+            height: 370px;
+            object-fit: fill;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Dark semi-transparent overlay */
+        }
+        .wishlist-container {
+            max-width: 800px;
+            margin: 0 auto;
+            margin-top: 60px;
+            padding: 20px;
+            background-color: #e1c8c8;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+        .wishlist-header {
+            text-align: center;
+            font-family: 'britannic';
+            color: #933a3a;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .wishlist-item:last-child {
+            border-bottom: none;
+        }
+        .wishlist-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        .wishlist-info {
+            flex: 1;
+        }
+        .wishlist-info h4 {
+            margin: 0;
+            color: #933a3a;
+        }
+        .wishlist-info p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        .remove-btn {
+            background-color: #933a3a;
+            border-style: solid;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .remove-btn:hover {
+            background-color: #5f1919;
+        }
+        /* Back to Homepage button styling */
+        .back-home-btn-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        .back-home-btn {
+            background-color: #933a3a;
+            color: #ffffff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .back-home-btn:hover {
+            background-color: #732c2c;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+        }
+        /* Footer */
+        footer {
+            background-color: #ccaeae;
+            color: #000000;
+            padding: 10px;
+            margin-top: 110px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-image-wrapper">
+        <!-- Website Name -->
+        <div class="site-title">Queen's Palette</div>
+        <!-- Header Image -->
+        <img src="makeup7.jpeg" alt="Makeup Banner" class="header-image">
+        <div class="overlay"></div>
+    </div>
+
+    <div class="wishlist-container">
+        <h2 class="wishlist-header">Your Wishlist</h2>
+        <div id="wishlist-items"></div>
+    </div>
+
+    <!-- Back to Homepage Button -->
+    <div class="back-home-btn-container">
+        <button class="back-home-btn" onclick="window.location.href='index.html'">Back to Homepage</button>
+    </div>
+
+    <!-- Footer section -->
+    <footer>
+        <p>&copy; 2024 Queen's Palette. All rights reserved.</p>
+        <p>Contact us: info@queenpalette.com | Phone: +60 123-456-789</p>
+    </footer>
+
+    <script>
+        let currentEditIndex = -1; // To track which item is being edited
+
+        function displayWishlist() {       // Function to display all items in the wishlist
+            const wishlistItemsContainer = document.getElementById('wishlist-items');
+            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];     // Retrieve wishlist from local storage, or set to empty array if null
+
+            wishlistItemsContainer.innerHTML = ''; // Clear existing items
+
+            if (wishlist.length === 0) {      // Display message if wishlist is empty
+                wishlistItemsContainer.innerHTML = '<p>Your wishlist is empty.</p>';
+                return;
+            }
+
+            wishlist.forEach((item, index) => {        // Iterate through each item in the wishlist array
+                const wishlistItem = document.createElement('div');
+                wishlistItem.classList.add('wishlist-item');
+
+                wishlistItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="wishlist-info">
+                        <h4>${item.name}</h4>
+                        <p>Price: $${item.price}</p>
+                    </div>
+                    <button class="remove-btn" onclick="removeFromWishlist(${index})">Remove</button>
+                `;
+
+                wishlistItemsContainer.appendChild(wishlistItem);    // Add the item to the wishlist container
+            });
+        }
+        function removeFromWishlist(index) {       // Function to remove an item from the wishlist by its index
+            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];        // Get wishlist from local storage
+            wishlist.splice(index, 1); // Remove item at the specified index
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));    // Update local storage with modified wishlist
+            displayWishlist(); // Refresh the wishlist display
+            alert(`You have successfully removed a product from your wishlist!`);      // Confirmation message
+        }
+        displayWishlist(); // Display wishlist items on page load
+    </script>
+</body>
+</html>

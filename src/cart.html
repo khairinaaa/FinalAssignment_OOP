@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        /* Style for the website name */
+        .site-title {
+            font-family: 'broadway', sans-serif;
+            font-size: 28px;
+            color: #e1dfdf;
+            position: absolute;
+            top: 10px;
+            left: 6px;
+            text-shadow: 0 0 4px #020202, 0 0 4px #020202;
+            padding: 5px 10px;
+            border-radius: 8px;
+            z-index: 1;
+        }
+        /* Style for the header image */
+        .header-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 370px;
+            margin-bottom: 20px;
+            overflow: hidden; /* Prevents the overlay from spilling outside */
+        }
+        .header-image {
+            width: 100%;
+            height: 370px;
+            object-fit: fill;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Dark semi-transparent overlay */
+        }
+        .cart-container {
+            max-width: 800px;
+            margin: 0 auto;
+            margin-top: 60px;
+            padding: 20px;
+            background-color: #e1c8c8;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+        .cart-header {
+            text-align: center;
+            font-family: 'britannic';
+            color: #933a3a;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        .cart-item-info {
+            flex: 1;
+            margin-left: 15px;
+        }
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+        }
+        .cart-item-controls input {
+            width: 50px;
+            text-align: center;
+            margin: 0 10px;
+        }
+        .cart-item-controls button {
+            padding: 5px 10px;
+            background-color: #933a3a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cart-info {
+            flex: 1;
+        }
+        .cart-info h3 {
+            margin: 0;
+            color: #181717;
+        }
+        .cart-info p {
+            margin: 5px 0;
+            font-size: 1em;
+        }
+        .cart-total {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        /* Modal styling */
+        #edit-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            max-width: 400px;
+            width: 90%;
+        }
+        #edit-modal h3 {
+            color: #131212;
+            margin-top: 0;
+        }
+        #edit-modal label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #edit-modal input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        #edit-modal .modal-btn {
+            margin-top: 15px;
+            padding: 8px 12px;
+            border-style: solid;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #edit-modal .save-btn {
+            background-color: #933a3a;
+            color: white;
+            margin-left: 10px;
+        }
+        #edit-modal .save-btn:hover {
+            background-color: #5f1919;
+        }
+        #edit-modal .cancel-btn {
+            background-color: #933a3a;
+            color: white;
+        }
+        #edit-modal .cancel-btn:hover {
+            background-color: #5f1919;
+        }
+        .total-amount {
+            text-align: right;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        .remove-btn, .edit-btn {
+            background-color: #933a3a;
+            border-style: solid;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .remove-btn:hover {
+            background-color: #5f1919;
+        }
+        .edit-btn:hover {
+            background-color: #5f1919;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .clear-cart-btn, .checkout-btn {
+            background-color: #933a3a;
+            color: white;
+            padding: 8px 10px;
+            margin-top: 10px;
+            width: 50%;
+            border-radius: 5px;
+            cursor: pointer;
+            border-style: solid;
+        }
+        .clear-cart-btn:hover {
+            background-color: #5f1919;
+        }
+        .checkout-btn:hover {
+            background-color: #5f1919;
+        }
+        /* Back to Homepage button styling */
+        .back-home-btn-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        .back-home-btn {
+            background-color: #933a3a;
+            color: #ffffff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .back-home-btn:hover {
+            background-color: #732c2c;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+        }
+        /* Footer */
+        footer {
+            background-color: #ccaeae;
+            color: #000000;
+            padding: 10px;
+            margin-top: 110px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-image-wrapper">
+        <!-- Website Name -->
+        <div class="site-title">Queen's Palette</div>
+        <!-- Header Image -->
+        <img src="makeup7.jpeg" alt="Makeup Banner" class="header-image">
+        <div class="overlay"></div>
+    </div>
+
+    <div class="cart-container">
+        <h2 class="cart-header">Your Cart</h2>
+        <div id="cart-items"></div>
+        <p class="total-amount" id="total-amount">Total: $0.00</p>
+        <div class="button-container">
+            <button class="clear-cart-btn" onclick="clearCart()">Clear Cart</button>
+            <button class="checkout-btn" onclick="checkout()">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Back to Homepage Button -->
+    <div class="back-home-btn-container">
+        <button class="back-home-btn" onclick="window.location.href='index.html'">Back to Homepage</button>
+    </div>
+
+    <!-- Edit Form Modal -->
+    <div id="edit-modal" style="display: none;">
+        <h3>Edit Quantity Item</h3>
+        <label for="edit-name">Quantity:</label>
+        <input type="number" id="edit-quantity" min="1" />
+        
+        <button class="modal-btn save-btn" onclick="saveEdit()">Save Changes</button>
+        <button class="modal-btn cancel-btn" onclick="closeModal()">Cancel</button>
+    </div>
+    
+    <!-- Footer section -->
+    <footer>
+        <p>&copy; 2024 Queen's Palette. All rights reserved.</p>
+        <p>Contact us: info@queenpalette.com | Phone: +60 123-456-789</p>
+    </footer>
+
+    <script>
+        let editIndex = null;  // Tracks the index of the item currently being edited in the cart
+
+        // Function to load all cart items from local storage and display them on the page
+        function loadCartItems() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('total-amount');
+            let total = 0;   // Initialize total price
+
+            cartItemsContainer.innerHTML = '';    // Clear any existing items in the cart display
+
+            if (cart.length === 0) {    // Check if cart is empty and display a message if so
+                cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+                cartTotalElement.textContent = 'Total: $0.00';
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                // Set default quantity to 1 if undefined
+                item.quantity = item.quantity || 1;
+
+                // Calculate total price for this item based on quantity
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+
+                //cart item element
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('cart-item');
+                itemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" width="100">
+                    <div class="cart-info">
+                        <span><h3>${item.name}</h3></span>
+                        <p>Price per Item: ${item.price || 'Not available'} USD</p>
+                        <span><p>Quantity: ${item.quantity} </p></span>
+                        <p><span>Total Price: $${itemTotal.toFixed(2)}</p></span>
+                    </div>
+                    <button class="edit-btn" onclick="openEditModal(${index})">Edit</button>
+                    <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button> 
+                `;
+                // Append item to container
+                cartItemsContainer.appendChild(itemElement);
+            });
+            // Update total price
+            cartTotalElement.textContent = `Total: $${total.toFixed(2)}`;
+        }
+        function openEditModal(index) {     // Function to open the edit modal and set initial quantity
+            editIndex = index;    // Track the index of the item being edited
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            document.getElementById('edit-quantity').value = cart[index].quantity;
+            document.getElementById('edit-modal').style.display = 'block';
+        }
+        function saveEdit() {    // Save the new quantity entered
+            const newQuantity = parseInt(document.getElementById('edit-quantity').value);
+            if (isNaN(newQuantity) || newQuantity < 1) {    // Validate input to ensure a positive integer
+                alert("Please enter a valid quantity.");    // Alert user if input is invalid
+                return;
+            }
+
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart[editIndex].quantity = newQuantity;    // Update the quantity of the item at the stored index
+            localStorage.setItem('cart', JSON.stringify(cart));
+            closeModal();
+            loadCartItems();
+        }
+        function closeModal() {
+            document.getElementById('edit-modal').style.display = 'none';
+        }
+        function removeFromCart(index) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1); // Remove item at specified index
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCartItems(); // Reload the cart items
+            alert(`You have successfully removed a product from your cart!`);
+        }
+        function clearCart() {   // Clear the entire cart and update the displa
+            localStorage.removeItem('cart');
+            loadCartItems();
+            alert(`You have successfully removed all product from your cart!`);
+        }
+        function checkout() {
+            alert("Proceed to checkout!");
+            window.location.href = "checkout.html";
+        }
+        // Load cart items on page load
+        window.onload = loadCartItems;
+    </script>
+</body>
+</html>

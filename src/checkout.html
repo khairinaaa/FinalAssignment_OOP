@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        /* Style for the website name */
+        .site-title {
+            font-family: 'broadway', sans-serif;
+            font-size: 28px;
+            color: #e1dfdf;
+            position: absolute;
+            top: 10px;
+            left: 6px;
+            text-shadow: 0 0 4px #020202, 0 0 4px #020202;
+            padding: 5px 10px;
+            border-radius: 8px;
+            z-index: 1;
+        }
+        /* Style for the header image */
+        .header-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 370px;
+            margin-bottom: 20px;
+            overflow: hidden; /* Prevents the overlay from spilling outside */
+        }
+        .header-image {
+            width: 100%;
+            height: 370px;
+            object-fit: fill;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Dark semi-transparent overlay */
+        }
+        /* Style for the checkout form */
+        .checkout-container {
+            max-width: 800px;
+            margin: 0 auto;
+            margin-top: 60px;
+            padding: 20px;
+            background-color: #e1c8c8;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+        .checkout-header {
+            text-align: center;
+            font-family: 'britannic';
+            color: #933a3a;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #783d3d;
+            box-sizing: border-box;
+        }
+        .notice {
+            font-size: 0.9em;
+            color: #d9534f;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .submit-btn {
+            width: 100%;
+            background-color: #933a3a;
+            color: white;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 25px;
+            border-style: solid;
+        }
+        .submit-btn:hover {
+            background-color: #5f1919;
+        }
+        /* Footer */
+        footer {
+            background-color: #ccaeae;
+            color: #000000;
+            padding: 10px;
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-image-wrapper">
+        <!-- Website Name -->
+        <div class="site-title">Queen's Palette</div>
+        <!-- Header Image -->
+        <img src="makeup7.jpeg" alt="Makeup Banner" class="header-image">
+        <div class="overlay"></div>
+    </div>
+
+    <div class="checkout-container">
+        <h2 class="checkout-header">Checkout</h2>
+        <p class="notice">Notice: Payment can only be made by card.</p>
+        
+        <form id="checkout-form">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="card-number">Card Number:</label>
+                <input type="text" id="card-number" name="card-number" required pattern="\d{16}" placeholder="Enter 16-digit card number">
+            </div>
+            <button type="submit" class="submit-btn">Complete Payment</button>
+        </form>
+    </div>
+
+    <!-- Footer section -->
+    <footer>
+        <p>&copy; 2024 Queen's Palette. All rights reserved.</p>
+        <p>Contact us: info@queenpalette.com | Phone: +60 123-456-789</p>
+    </footer>
+
+    <script>
+        // Add form submission event to alert payment success
+        document.getElementById("checkout-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Clear the cart from localStorage
+            localStorage.removeItem('cart');
+            alert("Payment successful! Thank you for shopping with us.");
+            
+            window.location.href = "index.html"; // Redirect to homepage after alert
+        });
+    </script>
+</body>
+</html>
